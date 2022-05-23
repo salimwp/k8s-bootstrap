@@ -2,3 +2,4 @@ notes
 terraform-libvirt/.terraform*
 tuts
 kubectl
+vagrant/.vagrant
