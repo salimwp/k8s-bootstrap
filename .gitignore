@@ -1,2 +1,4 @@
 notes
-terraform-libvirt/.terraform
+terraform-libvirt/.terraform*
+tuts
+kubectl

@@ -22,11 +22,11 @@ locals {
     }
 }
 
-resource "libvirt_pool" "k8s" {
-    name = "k8s"
-    type = "dir"
-    path = "/tmp/k8s-pool"
-}
+# resource "libvirt_pool" "k8s" {
+#    name = "k8s"
+#    type = "dir"
+#    path = "/tmp/k8s-pool"
+# }
 
 resource "libvirt_network" "k8s_net" {
     name = "k8snet"
@@ -105,12 +105,6 @@ resource "libvirt_domain" "k8s-controlplane" {
         volume_id = "${libvirt_volume.debian-bullseye-qcow2-controller.id}"
     }
 
-    filesystem {
-        source = "/tmp/k8s_share"
-        target = "tmp"
-        readonly = false
-    }
-
     console {
         type = "pty"
         target_type = "serial"
@@ -140,12 +134,6 @@ resource "libvirt_domain" "k8s-worker1" {
         volume_id = "${libvirt_volume.debian-bullseye-qcow2-worker1.id}"
     }
 
-    filesystem {
-        source = "/tmp/k8s_share"
-        target = "tmp"
-        readonly = false
-    }
-
     console {
         type = "pty"
         target_type = "serial"
@@ -173,12 +161,6 @@ resource "libvirt_domain" "k8s-worker2" {
 
     disk {
         volume_id = "${libvirt_volume.debian-bullseye-qcow2-worker2.id}"
-    }
-
-    filesystem {
-        source = "/tmp/k8s_share"
-        target = "tmp"
-        readonly = false
     }
 
     console {
