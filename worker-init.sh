@@ -1,6 +1,6 @@
 #!/bin/bash
 
-until curl https://k8s-controlplane:6443
+until curl -k https://k8s-controlplane:6443
 do
     echo "Waiting for k8s controller"
     sleep 5

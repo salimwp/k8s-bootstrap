@@ -2,12 +2,13 @@ terraform {
     required_providers {
         libvirt = {
             source = "dmacvicar/libvirt"
+            version = "0.6.14"
         }
     }
 }
 
 provider "libvirt" {
-    #uri = "qemu:///system"
+    #uri = "qemu+ssh://salim@192.168.68.108/system"
 }
 
 locals {
@@ -66,26 +67,26 @@ resource "libvirt_cloudinit_disk" "cloudinit_worker2" {
     user_data = local.worker2.user_data
 }
 
-resource "libvirt_volume" "debain-bullseye-qcow2-base" {
-    name = "debian-bullseys"
+resource "libvirt_volume" "ubuntu-qcow2-base" {
+    name = "ubuntu"
     source = "https://cloud-images.ubuntu.com/minimal/releases/focal/release/ubuntu-20.04-minimal-cloudimg-amd64.img"
 }
 
-resource "libvirt_volume" "debian-bullseye-qcow2-controller" {
-    name = "debian-bullseye-controller.qcow2"
-    base_volume_id = libvirt_volume.debain-bullseye-qcow2-base.id  
+resource "libvirt_volume" "ubuntu-qcow2-controller" {
+    name = "ubuntu-controller.qcow2"
+    base_volume_id = libvirt_volume.ubuntu-qcow2-base.id  
     size =  53687091200
 }
 
-resource "libvirt_volume" "debian-bullseye-qcow2-worker1" {
-    name = "debian-bullseye-worker1.qcow2"
-    base_volume_id = libvirt_volume.debain-bullseye-qcow2-base.id
+resource "libvirt_volume" "ubuntu-qcow2-worker1" {
+    name = "ubuntu-worker1.qcow2"
+    base_volume_id = libvirt_volume.ubuntu-qcow2-base.id
     size = 53687091200
 }
 
-resource "libvirt_volume" "debian-bullseye-qcow2-worker2" {
-    name = "debian-bullseye-worker2.qcow2"
-    base_volume_id = libvirt_volume.debain-bullseye-qcow2-base.id
+resource "libvirt_volume" "ubuntu-qcow2-worker2" {
+    name = "ubuntu-worker2.qcow2"
+    base_volume_id = libvirt_volume.ubuntu-qcow2-base.id
     size = 53687091200
 }
 
@@ -102,7 +103,7 @@ resource "libvirt_domain" "k8s-controlplane" {
     }
 
     disk {
-        volume_id = "${libvirt_volume.debian-bullseye-qcow2-controller.id}"
+        volume_id = "${libvirt_volume.ubuntu-qcow2-controller.id}"
     }
 
     console {
@@ -131,7 +132,7 @@ resource "libvirt_domain" "k8s-worker1" {
     }
 
     disk {
-        volume_id = "${libvirt_volume.debian-bullseye-qcow2-worker1.id}"
+        volume_id = "${libvirt_volume.ubuntu-qcow2-worker1.id}"
     }
 
     console {
@@ -160,7 +161,7 @@ resource "libvirt_domain" "k8s-worker2" {
     }
 
     disk {
-        volume_id = "${libvirt_volume.debian-bullseye-qcow2-worker2.id}"
+        volume_id = "${libvirt_volume.ubuntu-qcow2-worker2.id}"
     }
 
     console {
